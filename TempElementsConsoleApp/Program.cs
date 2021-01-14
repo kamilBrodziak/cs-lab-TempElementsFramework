@@ -5,51 +5,51 @@ using TempElementsLib;
 namespace TempElementsConsoleApp {
     class Program {
         static void Main(string[] args) {
-            //using (var tempFile = new TempFile()) {
-            //    Console.WriteLine("Wciśnij dowolny klawisz po sprawdzeniu czy plik istnieje");
-            //    Console.ReadKey();
-            //    Console.WriteLine("Podaj tekst który ma zostać dodany do pliku.");
-            //    var text = Console.ReadLine();
-            //    tempFile.AddText(text);
-            //    Console.WriteLine("Wciśnij dowolny klawisz aby przejść do usunięcia pliku");
-            //    Console.ReadKey();
-            //}
-            //var tempFile2 = new TempFile($"{System.IO.Path.GetTempPath()}temp123.tmp");
-            //Console.WriteLine($"Before {tempFile2.FilePath} dispose");
-            //tempFile2.Dispose();
-            //tempFile2.AddText("2");
+            using(var tempFile = new TempFile()) {
+                Console.WriteLine("Wciśnij dowolny klawisz po sprawdzeniu czy plik istnieje");
+                Console.ReadKey();
+                Console.WriteLine("Podaj tekst który ma zostać dodany do pliku.");
+                var text = Console.ReadLine();
+                tempFile.AddText(text);
+                Console.WriteLine("Wciśnij dowolny klawisz aby przejść do usunięcia pliku");
+                Console.ReadKey();
+            }
+            var tempFile2 = new TempFile($"{System.IO.Path.GetTempPath()}temp123.tmp");
+            Console.WriteLine($"Before {tempFile2.FilePath} dispose");
+            tempFile2.Dispose();
+            tempFile2.AddText("2");
 
-            //try {
-            //    Console.WriteLine("Podaj ścieżkę do tymczasowego pliku.");
-            //    var tempFile4 = new TempFile(Console.ReadLine());
-            //} catch (DirectoryNotFoundException e) {
-            //    Console.WriteLine("Ścieżka jest niepoprawna. Przynajmniej jeden z folderów nie istnieje.");
-            //} catch (ArgumentException e) {
-            //    Console.WriteLine("Niepoprawna ścieżka");
-            //} 
+            try {
+                Console.WriteLine("Podaj ścieżkę do tymczasowego pliku.");
+                var tempFile4 = new TempFile(Console.ReadLine());
+            } catch(DirectoryNotFoundException e) {
+                Console.WriteLine("Ścieżka jest niepoprawna. Przynajmniej jeden z folderów nie istnieje.");
+            } catch(ArgumentException e) {
+                Console.WriteLine("Niepoprawna ścieżka");
+            }
 
-            //using var tempFile3 = new TempFile();
-            //Console.WriteLine("Test c#8 using ");
+            using var tempFile3 = new TempFile();
+            Console.WriteLine("Test c#8 using ");
 
 
-            //using var tempTxtFile = new TempTxtFile();
-            //Console.WriteLine("Wpisywanie do pliku lini test123");
-            //tempTxtFile.WriteLine("test123");
-            //Console.WriteLine("Wpisywanie do pliku test");
-            //tempTxtFile.Write("test");
-            //Console.WriteLine("Naciśnij dowolny klawisz gdy sprawdzisz już zawartość pliku.");
-            //Console.ReadKey();
+            using var tempTxtFile = new TempTxtFile();
+            Console.WriteLine("Wpisywanie do pliku lini test123");
+            tempTxtFile.WriteLine("test123");
+            Console.WriteLine("Wpisywanie do pliku test");
+            tempTxtFile.Write("test");
+            Console.WriteLine("Naciśnij dowolny klawisz gdy sprawdzisz już zawartość pliku.");
+            Console.ReadKey();
 
-            //Console.WriteLine("Testowanie tworzenia folderu.");
-            //var tempDir = new TempDir();
-            //Console.WriteLine("Po utworzeniu folderu, przed dispose.");
-            //Console.WriteLine("Wciśnij dowolny klawisz aby usunąć folder.");
-            //Console.ReadKey();
-            //tempDir.Dispose();
-            //Console.WriteLine("Po dispose.");
+            Console.WriteLine("Testowanie tworzenia folderu.");
+            var tempDir = new TempDir();
+            Console.WriteLine("Po utworzeniu folderu, przed dispose.");
+            Console.WriteLine("Wciśnij dowolny klawisz aby usunąć folder.");
+            Console.ReadKey();
+            tempDir.Dispose();
+            Console.WriteLine("Po dispose.");
 
             Console.WriteLine("Testowanie tworzenia listy.");
-            var tempList = new TempElementsList();
+            using var tempList = new TempElementsList();
             Console.WriteLine("Dodanie pliku tymczasowego 1.");
             tempList.AddElement<TempFile>();
             Console.WriteLine("Dodanie pliku tekstowego 2.");
@@ -77,6 +77,48 @@ namespace TempElementsConsoleApp {
             Console.WriteLine("Testowanie listy - ilość elementów po RemoveDestroyed");
             tempList.RemoveDestroyed();
             Console.WriteLine(tempList.Elements.Count);
+
+            Console.WriteLine("Testowanie historii zmian");
+            using ( var tempStack = new TempElementsStack()) {
+                Console.WriteLine("Dodanie pliku tekstowego 1");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 2");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 3");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 4");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 5");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 6");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 7");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 8");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 9");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 10");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 11");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 12");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Dodanie pliku tekstowego 13");
+                tempStack.AddElement<TempTxtFile>();
+                Console.WriteLine("Został ustawiony limit 10 zapisanych zmian, także pliki 1,2,3 nie powinny istnieć.");
+                Console.WriteLine("Sprawdzenie czy ilość zapisanych zmian się zgadza.");
+                Console.WriteLine(tempStack.Elements.Count);
+                Console.WriteLine("Czas na sprawdzenie, aby kontynuować proszę nacisnąć dowolny klawisz.");
+                Console.ReadKey();
+                Console.WriteLine("Cofnięcie zmiany");
+                var tempEl = tempStack.Pop<TempTxtFile>();
+                Console.WriteLine("Nazwa pliku:");
+                Console.WriteLine(tempEl.FilePath);
+                Console.WriteLine("Ilość zapisanych zmian:");
+                Console.WriteLine(tempStack.Elements.Count);
+            }
+
         }
     }
 }
