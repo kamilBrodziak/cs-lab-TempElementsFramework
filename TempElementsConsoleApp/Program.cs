@@ -40,13 +40,43 @@ namespace TempElementsConsoleApp {
             //Console.WriteLine("Naciśnij dowolny klawisz gdy sprawdzisz już zawartość pliku.");
             //Console.ReadKey();
 
-            Console.WriteLine("Testowanie tworzenia folderu.");
-            var tempDir = new TempDir();
-            Console.WriteLine("Po utworzeniu folderu, przed dispose.");
-            Console.WriteLine("Wciśnij dowolny klawisz aby usunąć folder.");
+            //Console.WriteLine("Testowanie tworzenia folderu.");
+            //var tempDir = new TempDir();
+            //Console.WriteLine("Po utworzeniu folderu, przed dispose.");
+            //Console.WriteLine("Wciśnij dowolny klawisz aby usunąć folder.");
+            //Console.ReadKey();
+            //tempDir.Dispose();
+            //Console.WriteLine("Po dispose.");
+
+            Console.WriteLine("Testowanie tworzenia listy.");
+            var tempList = new TempElementsList();
+            Console.WriteLine("Dodanie pliku tymczasowego 1.");
+            tempList.AddElement<TempFile>();
+            Console.WriteLine("Dodanie pliku tekstowego 2.");
+            tempList.AddElement<TempTxtFile>();
+            Console.WriteLine("Dodanie pliku tymczasowego 3.");
+            var tempListEl = tempList.AddElement<TempFile>();
+            Console.WriteLine("Dodanie pliku tymczasowego 4.");
+            var tempListEl2 = tempList.AddElement<TempFile>();
+            Console.WriteLine("Testowanie listy - ilość elementów");
+            Console.WriteLine(tempList.Elements.Count);
+            Console.WriteLine("Czas na sprawdzenie czy pliki zostały utworzone, wciśnij dowolny klawisz po sprawdzeniu");
             Console.ReadKey();
-            tempDir.Dispose();
-            Console.WriteLine("Po dispose.");
+            Console.WriteLine("Usuwanie 3 pliku za pomocą metody DeleteElement");
+            tempList.DeleteElement(tempListEl);
+            Console.WriteLine("Testowanie listy - ilość elementów");
+            Console.WriteLine(tempList.Elements.Count);
+            Console.WriteLine("Czas na sprawdzenie czy plik został usunięty, wciśnij dowolny klawisz po sprawdzeniu");
+            Console.ReadKey();
+            Console.WriteLine("Usuwanie 4 pliku za pomocą metody Dispose elementu");
+            tempListEl2.Dispose();
+            Console.WriteLine("Testowanie listy - ilość elementów");
+            Console.WriteLine(tempList.Elements.Count);
+            Console.WriteLine("Czas na sprawdzenie czy plik został usunięty, wciśnij dowolny klawisz po sprawdzeniu");
+            Console.ReadKey();
+            Console.WriteLine("Testowanie listy - ilość elementów po RemoveDestroyed");
+            tempList.RemoveDestroyed();
+            Console.WriteLine(tempList.Elements.Count);
         }
     }
 }

@@ -11,19 +11,28 @@ namespace TempElementsLib
 
         public IReadOnlyCollection<ITempElement> Elements => elements;
 
-        ~TempElementsList() => throw new NotImplementedException();
+        ~TempElementsList() => Dispose(false);
 
-        public T AddElement<T>() where T : ITempElement, new()
-            => throw new NotImplementedException();
+        public T AddElement<T>() where T : ITempElement, new() {
+            var el = new T();
+            elements.Add(el);
+            return el;
+        }
         
-        public void DeleteElement<T>(T element) where T : ITempElement, new()
-            => throw new NotImplementedException();
+        public void DeleteElement<T>(T element) where T : ITempElement, new() {
+            element.Dispose();
+            elements.Remove(element);
+        }
 
-        public void MoveElementTo<T>(T element, string newPath) where T : ITempElement, new()
-            => throw new NotImplementedException();
+        public void MoveElementTo<T>(T element, string newPath) where T : ITempElement, new() {
+            // Nie do końca rozumiem jak można przesunąć ten element bez odpowiedniej metody w interfejsie ITempElement, np. zwracającej aktualną
+            // ścieżkę czy po prostu metoda move.
+            // Mógłbym ewentualnie tworzyć nowy plik a stary usuwać, ale wtedy tracę nazwę jak i zawartość.
+            // Ewentualnie mógłbym użyć metody ToString() w TempFile, TempDir i TempTxtFile do wypisywania ścieżki 
+            // i wtedy czytam zawartość pliku i tworzę nowy z tą samą nazwą a stary usuwam, ale chyba nie o to chodzi.
+        }
 
-        public void RemoveDestroyed()
-            => throw new NotImplementedException();
+        public void RemoveDestroyed() => elements.RemoveAll((el) => el.IsDestroyed);
 
         public bool IsEmpty => ((ITempElements)this).IsEmpty;
 
@@ -33,12 +42,18 @@ namespace TempElementsLib
         {
             if (!disposed)
             {
-                if (disposing)
-                {
+                if (disposing) {
                     // TODO: dispose managed state (managed objects)
+                    foreach(ITempElement el in elements) {
+                        el.Dispose();
+                        elements.Remove(el);
+                    }
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                foreach(ITempElement el in elements) {
+                    elements.Remove(el);
+                }
                 // TODO: set large fields to null
                 disposed = true;
             }
